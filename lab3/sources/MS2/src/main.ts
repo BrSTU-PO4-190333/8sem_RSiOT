@@ -12,8 +12,7 @@ import axios from 'axios';
 // = = = = > > >
 
 async function bootstrap() {
-  const PORT = process.env.APP_PORT || 3000;
-  console.log(process.env)
+  const PORT = process.env.MS2_PORT || 3000;
 
   const app = await NestFactory.create(AppModule);
 
@@ -24,18 +23,22 @@ async function bootstrap() {
   fs.writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   // < < < < = = = = For lab 3
-  const timeout = Number(process.env.MS2_TIMEOUT);
+  const timeout = Number(process.env.MS2_GOOGLE_CLOUD_PUBSUB_TIMEOUT);
 
   const pubsub = new PubSub({
-    projectId: process.env.PUBSUB__PROJECT_ID,
+    projectId: process.env.MS2_GOOGLE_CLOUD_PROJECT_ID,
     credentials: {
-      client_email: process.env.PUBSUB__CLIENT_EMAIL,
-      private_key: process.env.PUBSUB__PRIVATE_KEY,
+      client_email: process.env.MS2_GOOGLE_CLOUD_SERVICE_EMAIL,
+      private_key: process.env.MS2_GOOGLE_CLOUD_PUBSUB_PRIVATE_KEY,
     },
   });
 
-  const answer = pubsub.topic(process.env.PUBSUB__TOPIC_MS3_TO_MS2);
-  const subscription = answer.subscription(process.env.PUBSUB__SUB_MS3_TO_MS2);
+  const answer = pubsub.topic(
+    process.env.MS2_GOOGLE_CLOUD_PUBSUB_MS3_TO_MS2_TOPIC,
+  );
+  const subscription = answer.subscription(
+    process.env.MS2_GOOGLE_CLOUD_PUBSUB_MS3_TO_MS2_SUBSCRIBER,
+  );
   const messageResults = new Map<string, boolean>();
 
   subscription.on('message', async (message) => {
@@ -57,7 +60,7 @@ async function bootstrap() {
     const uuid = uuid_v4();
     const dataBuffer = Buffer.from(uuid);
     const messageId = await pubsub
-      .topic(process.env.PUBSUB__TOPIC_MS2_TO_MS3)
+      .topic(process.env.MS2_GOOGLE_CLOUD_PUBSUB_MS2_TO_MS3_TOPIC)
       .publish(dataBuffer);
 
     console.log(` [*] ${uuid} - отправлено сообщение на MS3 (${messageId})`);
@@ -73,13 +76,15 @@ async function bootstrap() {
           more: undefined,
         };
         // < < < < < ~ ~ ~ Этот код можно убрать, если не используем App Engine
-        try {
-          const result = await axios.get(process.env.MS3_URL); // включаем App Engine
-          data.more = result.data; // пишем в ответе, что App Engine работает
-        } catch (err) {
-          data.more = err; // пишем в ответе, что App Engine не работает
-        }
-        // ~ ~ ~ > > > > >
+        const APP_ENGINE_URL = process.env.MS2_GOOGLE_CLOUD_APP_ENGINE_URL_MS3;
+        if (APP_ENGINE_URL) {
+          try {
+            const result = await axios.get(APP_ENGINE_URL); // включаем App Engine
+            data.more = result.data; // пишем в ответе, что App Engine работает
+          } catch (err) {
+            data.more = err; // пишем в ответе, что App Engine не работает
+          }
+        } // ~ ~ ~ > > > > >
         response.status(400).json(data);
       } else if (result) {
         console.log(

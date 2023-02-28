@@ -61,8 +61,8 @@ Clone repository and install:
 ```bash
 ssh-keygen # Enter, Enter, Enter
 cat ~/.ssh/id_rsa.pub # Copy and paste to https://github.com/settings/ssh/new
-git clone git@github.com:BrSTU-PO4-190333/8sem_RSiOT_APP.git
-cd 8sem_RSiOT_APP/sources/APP
+git clone git@github.com:BrSTU-PO4-190333/8sem_RSiOT.git
+cd 8sem_RSiOT/lab3/sources/MS2
 yarn # npm i
 ```
 
@@ -89,8 +89,8 @@ Push to DockerHub:
 #docker push pavelinnokentevichgalanin/sem8-rsiot-app
 
 docker login
-docker build --file prod.Dockerfile -t pavelinnokentevichgalanin/sem8-rsiot-ms2 .
-docker push pavelinnokentevichgalanin/sem8-rsiot-ms2
+docker build --file prod.Dockerfile -t pavelinnokentevichgalanin/8sem-rsiot-ms2 .
+docker push pavelinnokentevichgalanin/8sem-rsiot-ms2
 ```
 
 ## Start docker-compose on SSH
@@ -102,15 +102,16 @@ sudo apt install git docker.io docker-compose make htop mc
 sudo groupadd docker
 sudo gpasswd -a $USER docker
 newgrp docker
-
-# $ ssh-keygen
-# $ cat ~/.ssh/id_rsa.pub # Copy public-key and paste on this url https://github.com/settings/ssh/new
-# $ git clone git@github.com:<имя пользователя github>/<имя репозитория>.git
-# $ cd <имя репозитория>
-cd sources/APP
 ```
 
 ```bash
+ssh-keygen
+cat ~/.ssh/id_rsa.pub # Copy public-key and paste on this url https://github.com/settings/ssh/new
+git clone git@github.com:BrSTU-PO4-190333/8sem_RSiOT.git
+```
+
+```bash
+cd 8sem_RSiOT/lab3/sources/MS2
 cp ssh.env.example ssh.env
 make ssh-d
 ```

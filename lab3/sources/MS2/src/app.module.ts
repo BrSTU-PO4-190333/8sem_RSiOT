@@ -15,12 +15,19 @@ import { PostCommmetEntity } from './post-commmets/entities/post-commmet.entity'
       envFilePath: `${process.env.NODE_ENV}.env`,
     }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DMS_HOST,
-      port: Number(process.env.DMS_PORT),
-      username: process.env.DMS_USER,
-      password: process.env.DMS_PASS,
-      database: process.env.DMS_NAME,
+      type:
+        process.env.MS2_DB_TYPE == 'postgres'
+          ? 'postgres'
+          : process.env.MS2_DB_TYPE == 'mysql'
+          ? 'mysql'
+          : process.env.MS2_DB_TYPE == 'mariadb'
+          ? 'mariadb'
+          : 'postgres',
+      host: process.env.MS2_DB_HOST,
+      port: Number(process.env.MS2_DB_PORT),
+      username: process.env.MS2_DB_USER,
+      password: process.env.MS2_DB_PASS,
+      database: process.env.MS2_DB_NAME,
       entities: [UserEntity, PostEntity, PostCommmetEntity],
       logging: process.env.NODE_ENV === 'dev',
       synchronize: false,
