@@ -1,0 +1,31 @@
+version: '3'
+services:
+
+  prod-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DMS_USER}
+      POSTGRES_PASSWORD: ${DMS_PASS}
+      POSTGRES_DB: ${DMS_NAME}
+    ports:
+      - ${OUT_PORT_DTB}:5432
+    volumes:
+      - ./docker/prod/postgres/data:/var/lib/postgresql/data
+
+  prod-adminer:
+    image: adminer
+    restart: always
+    depends_on: 
+      - prod-db
+    ports:
+      - ${OUT_PORT_ADM}:8080
+
+  prod-backend:
+    build:
+      context: .
+      dockerfile: ./prod.Dockerfile
+    ports:
+      - ${OUT_PORT_API}:${APP_PORT}
+    depends_on: 
+      - prod-db
+    command: sh prod.run.sh
