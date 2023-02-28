@@ -1,0 +1,10 @@
+version: '3'
+services:
+
+  prod-ms3:
+    build:
+      context: .
+      dockerfile: ./prod.Dockerfile
+    ports:
+      - ${MS3_DOCKER_PORT_NODEJS}:${MS3_PORT}
+    command: npm run start:prod
