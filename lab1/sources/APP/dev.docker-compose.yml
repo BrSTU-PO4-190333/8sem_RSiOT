@@ -4,11 +4,11 @@ services:
   dev-db:
     image: postgres
     environment:
-      POSTGRES_USER: ${DMS_USER}
-      POSTGRES_PASSWORD: ${DMS_PASS}
-      POSTGRES_DB: ${DMS_NAME}
+      POSTGRES_USER: ${MS2_DB_USER}
+      POSTGRES_PASSWORD: ${MS2_DB_PASS}
+      POSTGRES_DB: ${MS2_DB_NAME}
     ports:
-      - ${OUT_PORT_DTB}:5432
+      - ${MS2_DOCKER_PORT_DATABASE}:5432
     volumes:
       - ./docker/dev/postgres/data:/var/lib/postgresql/data
 
@@ -16,6 +16,6 @@ services:
     image: adminer
     restart: always
     ports:
-      - ${OUT_PORT_ADM}:8080
+      - ${MS2_DOCKER_PORT_ADMINER}:8080
     depends_on: 
       - dev-db

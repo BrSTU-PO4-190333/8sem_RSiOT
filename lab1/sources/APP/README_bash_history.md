@@ -19,8 +19,8 @@ npm i class-validator    # dto
 npm i class-transformer  # dto
 npm i bcrypt             # hash
 npm i @types/bcrypt      # hash
-npm i uuid
-npm i @google-cloud/pubsub
+#npm i uuid
+#npm i @google-cloud/pubsub
 
 # change npm to yarn
 yarn add -D @nestjs/cli     # nest
@@ -36,6 +36,6 @@ yarn add class-validator    # dto
 yarn add class-transformer  # dto
 yarn add bcrypt             # hash
 yarn add @types/bcrypt      # hash
-yarn add uuid
-yarn add @google-cloud/pubsub
+#yarn add uuid
+#yarn add @google-cloud/pubsub
 ```
