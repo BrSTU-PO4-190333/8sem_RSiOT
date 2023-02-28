@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  dev-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${MS2_DB_USER}
+      POSTGRES_PASSWORD: ${MS2_DB_PASS}
+      POSTGRES_DB: ${MS2_DB_NAME}
+    ports:
+      - ${MS2_DOCKER_PORT_DATABASE}:5432
+    volumes:
+      - ./docker/dev/postgres/data:/var/lib/postgresql/data
+
+  dev-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - ${MS2_DOCKER_PORT_ADMINER}:8080
+    depends_on: 
+      - dev-db

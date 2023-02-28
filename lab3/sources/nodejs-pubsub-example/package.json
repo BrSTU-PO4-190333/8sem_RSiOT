@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "start": "node src/subscriber.js",
+    "send": "node src/publisher.js"
+  },
+  "dependencies": {
+    "@google-cloud/pubsub": "^3.3.0",
+    "dotenv": "^16.0.3"
+  }
+}
