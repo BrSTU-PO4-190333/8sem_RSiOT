@@ -1,0 +1,826 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "summary": "Переадресация на Swagger",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "summary": "Регистрация пользователя",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Пользователь зарегистрирован",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Логин занят/электронная почта занята",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Пользователи"
+        ]
+      }
+    },
+    "/api/users/{userId}/posts": {
+      "get": {
+        "operationId": "UsersController_findAllPosts",
+        "summary": "Получить список постов",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Получили список постов",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostEntity"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь по переданному userId не существует",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Пользователи",
+          "Посты"
+        ]
+      }
+    },
+    "/api/posts": {
+      "post": {
+        "operationId": "PostsController_create",
+        "summary": "Создание поста",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Создан пост",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Посты"
+        ]
+      }
+    },
+    "/api/posts/{id}": {
+      "get": {
+        "operationId": "PostsController_findOne",
+        "summary": "Получить пост по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Получили пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найден пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Посты"
+        ]
+      },
+      "patch": {
+        "operationId": "PostsController_update",
+        "summary": "Обновить пост по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Обновили пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найден пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Посты"
+        ]
+      },
+      "delete": {
+        "operationId": "PostsController_remove",
+        "summary": "Удалить пост по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Удалили пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Не найден пост по id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Посты"
+        ]
+      }
+    },
+    "/api/posts/{postId}/commmets": {
+      "post": {
+        "operationId": "PostCommmetsController_create",
+        "summary": "Создание комментария",
+        "parameters": [
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostCommmetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Создали комментарий",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostCommmetEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "- Пост с переданным postId не существует \n\n- Пользователь с переданным commentatorId не существует \n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Коментарии поста"
+        ]
+      },
+      "get": {
+        "operationId": "PostCommmetsController_findAll",
+        "summary": "Получить список комментариев для поста",
+        "parameters": [
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Получили список комментариев",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostCommmetEntity"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пост с переданным postId не существует",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Коментарии поста"
+        ]
+      }
+    },
+    "/api/posts/{postId}/commmets/{id}": {
+      "get": {
+        "operationId": "PostCommmetsController_findOne",
+        "summary": "Получить комментарий по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Получили список комментариев",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostCommmetEntity"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "- Пост с переданным postId не существует \n\n- Комментарий с переданным id не существует \n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpExceptionDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Коментарии поста"
+        ]
+      },
+      "patch": {
+        "operationId": "PostCommmetsController_update",
+        "summary": "Обновление комментария по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostCommmetDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Пост с переданным id обновлен",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "- Пост с переданным postId не существует \n\n- Пользователь с переданным creatorId не существует \n\n- Комментарий с переданным id не существует \n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Коментарии поста"
+        ]
+      },
+      "delete": {
+        "operationId": "PostCommmetsController_remove",
+        "summary": "Удаление комментария по id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "postId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Пост с переданным id удален",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "- Пост с переданным postId не существует \n\n- Комментарий с переданным id не существует \n\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Коментарии поста"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "REST API документация",
+    "description": "\n## Cхема базы данных \"МикроБлок\"\n\n<figure>\n    <pre><code>\n         + -------------------- +         + --------------- +\n         | users                |         | posts           |\n         | -------------------- |         + --------------- +\n    +- 1 | id: number           | 1 -+    | id: number      | 1 -+\n    |    | login: string        |    +- n | userId: number  |    |\n    |    | email: string        |         | title: string   |    |\n    |    | hashPassword: string |         | content: string |    |\n    |    + -------------------- +         + --------------- +    |\n    |                                                            |\n    |    + --------------------- +                               |\n    |    | postComments          |                               |\n    |    + --------------------- +                               |\n    |    | id: number            |                               |\n    +- n | commentatorId: number |                               | \n         | postId: number        | n ----------------------------+\n         | message: string       |\n         + --------------------- +\n    </code></pre>\n</figure>\n\n## Таблицы базы данных\n- **users** - таблица для регистрации пользователей\n- **posts** - таблица для хранения постов \n- **postComments** - таблица для хранения комментариев поста\n",
+    "version": "1.0.0",
+    "contact": {},
+    "license": {
+      "name": "GPL-3.0 license",
+      "url": "https://github.com/BrSTU-PO4-190333/sem8_RSiOT/blob/main/LICENSE"
+    }
+  },
+  "tags": [
+    {
+      "name": "Пользователи",
+      "description": "Регистрация пользователя"
+    },
+    {
+      "name": "Посты",
+      "description": "CRUD для постов"
+    },
+    {
+      "name": "Коментарии поста",
+      "description": "CRUD для комментариев поста"
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "description": "Логин пользователя",
+            "example": "user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта пользователя",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Пароль пользователя",
+            "example": "secret123#$%"
+          }
+        },
+        "required": [
+          "login",
+          "email",
+          "password"
+        ]
+      },
+      "CreateUserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Ид пользователя",
+            "example": 1
+          },
+          "login": {
+            "type": "string",
+            "description": "Логин пользователя",
+            "example": "user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Электронная почта пользователя",
+            "example": "user@example.com"
+          }
+        },
+        "required": [
+          "id",
+          "login",
+          "email"
+        ]
+      },
+      "HttpExceptionDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP код"
+          },
+          "message": {
+            "type": "string",
+            "description": "сообщение"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message"
+        ]
+      },
+      "PostEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Ид поста",
+            "example": 1
+          },
+          "userId": {
+            "type": "number",
+            "description": "Ид кользователя",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "Заголовок поста",
+            "example": "С Новым годом!"
+          },
+          "content": {
+            "type": "string",
+            "description": "Текст поста",
+            "example": "Отмечается в ночь с 31 декабря по 1 января."
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "title",
+          "content"
+        ]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "Ид пользователя",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "Заголовок поста",
+            "example": "С Новым годом!"
+          },
+          "content": {
+            "type": "string",
+            "description": "Текст поста",
+            "example": "Отмечается в ночь с 31 декабря по 1 января."
+          }
+        },
+        "required": [
+          "userId",
+          "title",
+          "content"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "number",
+            "description": "Ид пользователя",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "description": "Заголовок поста",
+            "example": "С Новым годом!"
+          },
+          "content": {
+            "type": "string",
+            "description": "Текст поста",
+            "example": "Отмечается в ночь с 31 декабря по 1 января."
+          }
+        }
+      },
+      "UpdateResDto": {
+        "type": "object",
+        "properties": {
+          "generatedMaps": {
+            "description": "Массив сгенерированных объектов карты, которые содержат информацию о любых значениях, сгенерированных базой данных во время операции обновления (например, значения по умолчанию или значения, сгенерированные триггерами)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "raw": {
+            "description": "Необработанный ответ из базы данных, который может быть полезен для отладки или понимания точных деталей операции обновления",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "affected": {
+            "type": "number",
+            "description": "Количество строк, затронутых UPDATE-операцией",
+            "example": 0
+          }
+        },
+        "required": [
+          "generatedMaps",
+          "raw",
+          "affected"
+        ]
+      },
+      "UpdateResponseDto": {
+        "type": "object",
+        "properties": {
+          "more": {
+            "$ref": "#/components/schemas/UpdateResDto"
+          }
+        }
+      },
+      "DeleteResDto": {
+        "type": "object",
+        "properties": {
+          "raw": {
+            "description": "Необработанный результат запроса к базе данных, который может включать дополнительную информацию о выполнении запроса, например количество затронутых строк или любые сгенерированные сообщения об ошибках",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "affected": {
+            "type": "number",
+            "description": "Количество сущностей затронутых DELETE-операцией",
+            "example": 0
+          }
+        },
+        "required": [
+          "raw",
+          "affected"
+        ]
+      },
+      "DeleteResponseDto": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number",
+            "description": "HTTP код"
+          },
+          "message": {
+            "type": "string",
+            "description": "сообщение"
+          },
+          "more": {
+            "$ref": "#/components/schemas/DeleteResDto"
+          }
+        },
+        "required": [
+          "statusCode",
+          "message"
+        ]
+      },
+      "CreatePostCommmetDto": {
+        "type": "object",
+        "properties": {
+          "commentatorId": {
+            "type": "number",
+            "description": "Ид пользователя",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "Коментарий читателя поста",
+            "example": "Это видео мне помогло разобраться с темой."
+          }
+        },
+        "required": [
+          "commentatorId",
+          "message"
+        ]
+      },
+      "PostCommmetEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "description": "Ид поста",
+            "example": 1
+          },
+          "commentatorId": {
+            "type": "number",
+            "description": "Ид читателя",
+            "example": 1
+          },
+          "postId": {
+            "type": "number",
+            "description": "Ид поста",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "Коментарий читателя поста",
+            "example": "Это видео мне помогло разобраться с темой."
+          }
+        },
+        "required": [
+          "id",
+          "commentatorId",
+          "postId",
+          "message"
+        ]
+      },
+      "UpdatePostCommmetDto": {
+        "type": "object",
+        "properties": {
+          "commentatorId": {
+            "type": "number",
+            "description": "Ид пользователя",
+            "example": 1
+          },
+          "message": {
+            "type": "string",
+            "description": "Коментарий читателя поста",
+            "example": "Это видео мне помогло разобраться с темой."
+          }
+        }
+      }
+    }
+  }
+}

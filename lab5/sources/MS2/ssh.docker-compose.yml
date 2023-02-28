@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+  ssh-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${MS2_DB_USER}
+      POSTGRES_PASSWORD: ${MS2_DB_PASS}
+      POSTGRES_DB: ${MS2_DB_NAME}
+    ports:
+      - ${MS2_DOCKER_PORT_DATABASE}:5432
+    volumes:
+      - ./docker/ssh/postgres:/var/lib/postgresql
+
+  ssh-admin:
+    image: adminer
+    restart: always
+    depends_on: 
+      - ssh-db
+    ports:
+      - ${MS2_DOCKER_PORT_ADMINER}:8080
+
+  ssh-backend:
+    image: pavelinnokentevichgalanin/8sem-rsiot-ms2
+    restart: always
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - ${MS2_DOCKER_PORT_NODEJS}:${MS2_PORT}
+    volumes:
+      - ./ssh.env:/app/prod.env
+    depends_on: 
+      - ssh-db
+    command: sh /app/prod.run.sh
+
+  ssh-watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=150
+      - WATCHTOWER_LABEL_ENABLE=true
