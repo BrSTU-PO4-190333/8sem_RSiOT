@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  tex:
+    image: mirisbowring/texlive_ctan_full:2019
+    volumes:
+      - ./..:/app/
+      - ./docker/build/:/build/
+      - ./docker/data/:/data/
+      - ./docker/temp/:/temp/
+    command: make -C /app/reports docker-compose-script

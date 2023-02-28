@@ -1,0 +1,179 @@
+\documentclass[12pt, a4paper, simple]{eskdtext}
+
+\usepackage{config/main.env}
+\usepackage{config/report.env}
+\usepackage{styles/listing}
+\usepackage{styles/lists}
+\usepackage{styles/SectionMargins}
+\usepackage{styles/table}
+\usepackage{styles/TableOfContent}
+\usepackage{styles/url}
+
+\begin{document}
+  \input{include/TitlePage.report.tex}
+
+  % = = = = = = = = = = = = = = = =
+  \ESKDstyle{empty}
+  \begin{center}
+    \textbf{Отчёт лабораторной работы №\envReportLabNumber}
+  \end{center}
+
+  \paragraph{} \textbf{Тема}: <<\envReportTitle>>
+
+  \paragraph{} \textbf{Цель}:
+  Знакомство с Docker.
+
+  \paragraph{} \textbf{Что нужно сделать}:
+
+  Разверните приложения APP (MS2) и MS3 в Docker.
+
+  % Задеплойте данные приложения в Compute Engine и App Engine соответственно.
+
+  \paragraph{} \textbf{Ход работы}:
+
+  \begin{center}
+    \textbf{Сборка MS2-образа из Dockerfile и отправка на DockerHub}
+  \end{center}
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{blue},
+  ]{../sources/MS2/prod.Dockerfile}
+
+  \begin{lstlisting}[
+    frame=single,
+    rulecolor=\color{blue},
+    name={Команды bash по отправке MS2-образа Dockerfile на DockerHub},
+  ]
+docker login
+docker build --file prod.Dockerfile -t pavelinnokentevichgalanin/8sem-rsiot-ms2 .
+docker push pavelinnokentevichgalanin/8sem-rsiot-ms2
+\end{lstlisting}
+
+  \begin{center}
+    \textbf{Сборка MS3-образа из Dockerfile и отправка на DockerHub}
+  \end{center}
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/MS3/prod.Dockerfile}
+
+  \begin{lstlisting}[
+    frame=single,
+    rulecolor=\color{magenta},
+    name={Команды bash по отправке MS3-образа Dockerfile на DockerHub},
+  ]
+docker login
+docker build --file prod.Dockerfile -t pavelinnokentevichgalanin/8sem-rsiot-ms3 .
+docker push pavelinnokentevichgalanin/8sem-rsiot-ms3
+\end{lstlisting}
+
+  \newpage
+  \begin{center}
+    \textbf{Образ MS2 из DockerHub в docker-compose.yml (на Compute Engine)}
+  \end{center}
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{blue},
+  ]{../sources/DOCKER/MS2/ssh.env.example}
+  
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{blue},
+  ]{../sources/DOCKER/MS2/Makefile}
+  
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{blue},
+  ]{../sources/DOCKER/MS2/ssh.docker-compose.yml}
+
+
+  \newpage
+  \begin{center}
+    \textbf{Файл docker-compose.yml для MS3 на Google Cloud Compute Engine}
+  \end{center}
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/DOCKER/MS3/ssh.env.example}
+  
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/DOCKER/MS3/Makefile}
+  
+  \newpage
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/DOCKER/MS3/ssh.docker-compose.yml}
+
+\begin{lstlisting}[
+  language=bash,
+  frame=single,
+  rulecolor=\color{green},
+  name={Команды bash на Google Cloud Compute Engine},
+]
+sudo apt update
+sudo apt install -y docker.io docker-compose make git
+
+ssh-keygen # Enter, Enter, Enter
+cat ~/.ssh/id_rsa.pub # Copy and paste to https://github.com/settings/ssh/new
+
+git clone git@github.com:BrSTU-PO4-190333/8sem_RSiOT.git
+cd 8sem_RSiOT/lab5/sources/DOCKER
+
+cd MS2
+make ssh-d      # Запустили MS2, Postgres и WatchTower
+make ssh-logs   # Смотрим логи того как запускаются контейнеры
+
+cd ../MS3
+make ssh-d      # Запустили MS3 и WatchTower
+make ssh-logs   # Смотрим логи того как запускаются контейнеры
+\end{lstlisting}
+
+  \paragraph{} \textbf{Вывод}:
+  Собрали образ MS2 и MS3 из Dockerfile.
+  Выложили образы на DockerHub \cite{dockerhub}.
+  На Compute Engine установили docker.io, docker-compose, git.
+  Склонировали репозиторий с docker-compose.yml.
+  Запустили docker-compos.yml.
+  Настроили Watchtower \cite{watchtower}, чтобы каждые 150 секунд следил за обновлениями на DockerHub, автоматически выкачивал новый образ,
+  удалял старый образ и поднимал новый скаченный образ.
+
+  % = = = = = = = = = = = = = = = =
+  % \newpage
+  \begingroup
+    \phantomsection
+    \addcontentsline{toc}{section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+    \section*{Список использованных источников} %\section*{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+
+    \renewcommand{\addcontentsline}[3]{}% Remove functionality of \addcontentsline
+    \renewcommand{\section}[2]{}% Remove functionality of \section
+
+    \begin{thebibliography}{}
+
+      \bibitem{dockerhub}
+      Docker Hub
+      [Electronic resource]. -
+      Mode of access:
+      \url{https://hub.docker.com}.
+      {\scriptsize
+      Date of access: 27.02.2023.
+      }
+
+      \bibitem{watchtower}
+      Arguments - Watchtower
+      [Electronic resource]. -
+      Mode of access:
+      \url{https://containrrr.dev/watchtower/arguments}.
+      Date of access: 27.02.2023.
+
+    \end{thebibliography}
+  \endgroup
+  % = = = = = = = = = = = = = = = =
+\end{document}
