@@ -1,0 +1,193 @@
+\documentclass[12pt, a4paper, simple]{eskdtext}
+
+\usepackage{config/main.env}
+\usepackage{config/report.env}
+\usepackage{styles/listing}
+\usepackage{styles/lists}
+\usepackage{styles/SectionMargins}
+\usepackage{styles/table}
+\usepackage{styles/TableOfContent}
+\usepackage{styles/url}
+
+\begin{document}
+  \input{include/TitlePage.report.tex}
+
+  % = = = = = = = = = = = = = = = =
+  \ESKDstyle{empty}
+  \begin{center}
+    \textbf{Отчёт лабораторной работы №\envReportLabNumber}
+  \end{center}
+
+  \paragraph{} \textbf{Тема}: <<\envReportTitle>>
+
+  \paragraph{} \textbf{Цель}:
+  Знакомство с Kubernetes Engine, Container Registry.
+
+  \paragraph{} \textbf{Что нужно сделать}:
+
+  Полученные в предыдущей работе образы должны быть запущены в Google Kubernetes Engine.
+  Для этого сохраните их в Google Container Registry.
+
+  Для создания и управления кластером используйте kubectl.
+  Настройте все взаимодействия между сервисами.
+
+  После запуска убедитесь в BigQuery, Cloud Functions, что общая система продолжает функционировать,
+  несмотря на переезд микросервисов из GCE и GAE в GKE.
+
+  \paragraph{} \textbf{{Ход работы}}:
+
+  Посмотрел видео на YouTube \cite{kubernetes_install} по установке VirtualBox, kubectl, minikube на Win10.
+
+  \begin{lstlisting}[
+    frame=single,
+    rulecolor=\color{blue},
+    name={Установка VirtualBox на Ubuntu 22.10},
+  ]
+sudo apt update
+sudo apt install virtualbox
+\end{lstlisting}
+
+  Почитал официальную документацию \cite{kubernetes_install_kubectl} и установил kubectl.
+
+\begin{lstlisting}[
+  frame=single,
+  rulecolor=\color{blue},
+  name={Установка kubectl на Ubuntu 22.10},
+]
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+\end{lstlisting}
+
+  Почитал официальную документацию \cite{kubernetes_install_minikube} и установил minikube.
+
+\begin{lstlisting}[
+  frame=single,
+  rulecolor=\color{blue},
+  name={Установка minikube на Ubuntu 22.10},
+]
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+minikube version
+\end{lstlisting}
+
+  Посмотрел теорию на YouTube \cite{kubernetes_theory} по Kubernetes.
+
+  Посмотрел практику по подам Kubernetes на YouTube \cite{kubernetes_create_pod} и создал конфиги pod-ms3-ver1.yaml, pod-ms2-ver1.yaml.
+
+  \newpage
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/K8S/pod-ms3-ver1.example.yaml}
+
+  \begin{lstlisting}[
+    frame=single,
+    rulecolor=\color{blue},
+    name={Запуск пода MS3},
+  ]
+cp pod-ms3-ver1.example.yaml pod-ms3-ver1.yaml
+
+# меняем настройки env в файле pod-ms3-ver1.yaml
+
+kubectl apply -f pod-ms3-ver1.yaml  # запускаем под
+
+kubectl get pods                    # смотрим активные поды
+kubectl describe pods ms3           # больше информации о MS3
+kubectl logs ms3                    # смотрим логи MS3
+kubectl port-forward ms3 3333:8080  # открываем порт на своей машине
+
+kubectl get pods                    # смотрим активные поды
+kubectl delete -f pod-ms3-ver1.yaml # удаляем под kubectl delete pods ms3
+kubectl get pods                    # смотрим активные поды
+\end{lstlisting}
+
+  \newpage
+
+  \lstinputlisting[
+    frame=single,
+    rulecolor=\color{magenta},
+  ]{../sources/K8S/pod-ms2-ver1.example.yaml}
+
+  \newpage
+
+  \begin{lstlisting}[
+    frame=single,
+    rulecolor=\color{blue},
+    name={Запуск пода MS2},
+  ]
+cp pod-ms2-ver1.example.yaml pod-ms2-ver1.yaml
+
+# меняем настройки env в файле pod-ms2-ver1.yaml
+
+kubectl apply -f pod-ms2-ver1.yaml  # запускаем под
+
+kubectl get pods                    # смотрим активные поды
+kubectl describe pods ms2           # больше информации о MS2
+kubectl logs ms2                    # смотрим логи MS2
+kubectl port-forward ms2 2222:44480 # открываем порт на своей машине
+
+kubectl get pods                    # смотрим активные поды
+kubectl delete -f pod-ms2-ver1.yaml # удаляем под kubectl delete pods ms2
+kubectl get pods                    # смотрим активные поды
+\end{lstlisting}
+
+  \paragraph{} \textbf{Вывод}:
+  Установили VirtualBox, kubectl, minikube.
+  Создали кластер в VirtualBox используя minikube.
+  Создали под для MS3 с помощью kubectl и конфига pod-ms3-ver1.yaml.
+  Создали под для MS2 с помощью kubectl и конфига pod-ms2-ver1.yaml.
+
+  % = = = = = = = = = = = = = = = =
+  % \newpage
+  \begingroup
+    \phantomsection
+    \addcontentsline{toc}{section}{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+    \section*{Список использованных источников} %\section*{СПИСОК ИСПОЛЬЗОВАННЫХ ИСТОЧНИКОВ}
+
+    \renewcommand{\addcontentsline}[3]{}% Remove functionality of \addcontentsline
+    \renewcommand{\section}[2]{}% Remove functionality of \section
+
+    \begin{thebibliography}{}
+
+      \bibitem{kubernetes_install}
+      2-K8s - Поднятие простого Локального K8s Cluster на Windows - YouTube
+      [Электронный ресурс]. -
+      Режим доступа:
+      \url{https://www.youtube.com/watch?v=WAIrMmCQ3hE}.
+      Дата доступа: 28.02.2023.
+
+      \bibitem{kubernetes_install_kubectl}
+      Install and Set Up kubectl on Linux | Kubernetes
+      [Electronic resource]. -
+      Mode of access:
+      \url{https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/}.
+      Date of access: 28.02.2023.
+
+      \bibitem{kubernetes_install_minikube}
+      minikube start | minikube
+      [Electronic resource]. -
+      Mode of access:
+      \url{https://minikube.sigs.k8s.io/docs/start/}.
+      Date of access: 28.02.2023.
+
+      \bibitem{kubernetes_theory}
+      7-K8s - Главные Объекты Kubernetes, из чего состоит K8s - Кубернетес на простом языке - YouTube
+      [Электронный ресурс]. -
+      Режим доступа:
+      \url{https://www.youtube.com/watch?v=ouKaU1B5eKM&list=PLg5SS_4L6LYvN1RqaVesof8KAf-02fJSi&index=7}.
+      Дата доступа: 28.02.2023.
+
+      \bibitem{kubernetes_create_pod}
+      8-K8s - Создание и Управление - PODS - Кубернетес на простом языке - YouTube
+      [Электронный ресурс]. -
+      Режим доступа:
+      \url{https://www.youtube.com/watch?v=kGwe8IEDiX4&list=PLg5SS_4L6LYvN1RqaVesof8KAf-02fJSi&index=8}.
+      Дата доступа: 28.02.2023.
+
+    \end{thebibliography}
+  \endgroup
+  % = = = = = = = = = = = = = = = =
+\end{document}
