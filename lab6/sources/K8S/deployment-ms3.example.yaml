@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms3-deployment
+  labels:
+    app: ms3-k8s-application
+spec:
+  selector:
+    matchLabels:
+      project: kgb3
+  template:
+    metadata:
+      labels:
+        project: kgb3
+    spec:
+      containers:
+        - name: container-ms3
+          image: pavelinnokentevichgalanin/8sem-rsiot-ms3:latest
+          ports:
+            - containerPort: 8080
+          command: ["npm", "run", "start"]
+          env:
+
+            - name: MS3_PORT
+              value: "8080"
+
+            - name: MS3_GOOGLE_CLOUD_PROJECT_ID
+              value: "ид_проекта"
+
+            - name: MS3_GOOGLE_CLOUD_SERVICE_EMAIL
+              value: "название-аккаунта@проект.iam.gserviceaccount.com"
+
+            - name: MS3_GOOGLE_CLOUD_PUBSUB_PRIVATE_KEY
+              value: "-----BEGIN PRIVATE KEY-----приватный ключ-----END PRIVATE KEY-----\n"
+
+            - name: MS3_GOOGLE_CLOUD_PUBSUB_MS3_TO_MS2_TOPIC
+              value: "тема_ms3_to_ms2"
+
+            - name: MS3_GOOGLE_CLOUD_PUBSUB_MS2_TO_MS3_TOPIC
+              value: "тема_ms2_to_ms3"
+
+            - name: MS3_GOOGLE_CLOUD_PUBSUB_MS2_TO_MS3_SUBSCRIBER
+              value: "имя_подписчика_m2_to_ms3"

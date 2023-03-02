@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ms2
+spec:
+  containers:
+    - name: container-ms2
+      image: pavelinnokentevichgalanin/8sem-rsiot-ms2:latest
+      ports:
+        - containerPort: 44480
+      command: ["sh", "/app/prod.run.sh"]
+      env:
+
+        - name: MS2_PORT
+          value: "44480"
+
+        - name: MS2_DB_TYPE
+          value: "postgres"
+
+        - name: MS2_DB_HOST
+          value: "11.111.111.111"
+
+        - name: MS2_DB_PORT
+          value: "25432"
+
+        - name: MS2_DB_USER
+          value: "admin"
+
+        - name: MS2_DB_PASS
+          value: "secret123password"
+
+        - name: MS2_DB_NAME
+          value: "database"
+
+        - name: MS2_GOOGLE_CLOUD_APP_ENGINE_URL_MS3
+          value: "https://example.com"
+
+        - name: MS2_GOOGLE_CLOUD_PUBSUB_MS3_TO_MS2_TOPIC
+          value: "тема_ms3_to_ms2"
+
+        - name: MS2_GOOGLE_CLOUD_PUBSUB_MS2_TO_MS3_TOPIC
+          value: "тема_ms2_to_ms3"
+
+        - name: MS2_GOOGLE_CLOUD_PUBSUB_MS3_TO_MS2_SUBSCRIBER
+          value: "имя_подписчика_m3_to_ms2"
+
+        - name: MS2_GOOGLE_CLOUD_PROJECT_ID
+          value: "ид_проекта"
+
+        - name: MS2_GOOGLE_CLOUD_SERVICE_EMAIL
+          value: "название-аккаунта@проект.iam.gserviceaccount.com"
+
+        - name: MS2_GOOGLE_CLOUD_PUBSUB_PRIVATE_KEY
+          value: "-----BEGIN PRIVATE KEY-----приватный ключ-----END PRIVATE KEY-----\n"
+
+        - name: MS2_GOOGLE_CLOUD_PUBSUB_TIMEOUT
+          value: "4000"
