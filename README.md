@@ -63,36 +63,38 @@
 ## Дерево показывающее код лабораторных работ
 
 ```bash
-tree --charset ascii -d
+sudo apt update
+sudo apt install -y tree
+tree -d
 ```
 
 ```bash
 .
-|-- lab1
-|   |-- reports
-|   `-- sources
-|       `-- APP         # APP - приложение NestJS со SwaggerUI
-|-- lab2                # MS2 - тоже приложение APP
-|   `-- reports
-|-- lab3
-|   |-- reports
-|   `-- sources
-|       |-- MS2         # MS2 - тут для NestJS добавил Google Cloud PubSub
-|       `-- MS3         # MS3 - тут для NodeJS написал отправку в Google Cloud PubSub
-|-- lab4
-|   |-- reports
-|   `-- sources
-|       `-- MS4         # MS4 - NodeJS приложение отправляет данные в BigTable и BigQuery
-|-- lab5
-|   |-- reports
-|   `-- sources
-|       |-- DOCKER
-|       |   |-- MS2     # MS2 - тут docker-compose.yml
-|       |   `-- MS3     # MS3 - тут docker-compose.yml
-|       |-- MS2         # MS2 - тут для NestJS Dockerfile
-|       `-- MS3         # MS3 - тут для NodeJS Dockerfile
-`-- lab6
-    |-- reports
-    `-- sources
-        `-- K8S         # K8S - тут deployment-ms2.yaml и deployment-ms3.yaml
+├── lab1
+│   ├── reports
+│   └── sources
+│       └── APP     # APP - приложение NestJS со SwaggerUI
+├── lab2            # MS2 - тоже приложение APP
+│   └── reports
+├── lab3
+│   ├── reports
+│   └── sources
+│       ├── MS2     # MS2 - тут для NestJS добавил Google Cloud PubSub
+│       └── MS3     # MS3 - тут для NodeJS написал отправку в Google Cloud PubSub
+├── lab4
+│   ├── reports
+│   └── sources
+│       └── MS4     # MS4 - NodeJS приложение отправляет данные в BigTable и BigQuery
+├── lab5
+│   ├── reports
+│   └── sources
+│       ├── DOCKER
+│       │   ├── MS2 # MS2 - тут docker-compose.yml
+│       │   └── MS3 # MS3 - тут docker-compose.yml
+│       ├── MS2     # MS2 - тут для NestJS Dockerfile
+│       └── MS3     # MS3 - тут для NodeJS Dockerfile
+└── lab6
+    ├── reports
+    └── sources
+        └── K8S     # K8S - тут deployment-ms2.yaml и deployment-ms3.yaml
 ```
